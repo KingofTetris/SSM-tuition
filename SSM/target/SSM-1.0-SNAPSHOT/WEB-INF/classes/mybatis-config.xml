@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <!--Mybatis配置文件的标签顺序必须按照下面的顺序
+         type "configuration" must match
+         "(properties?,settings?,typeAliases?,
+         typeHandlers?,objectFactory?,objectWrapperFactory?,
+         reflectorFactory?,plugins?,environments?,
+         databaseIdProvider?,mappers?)".
+    -->
+    <settings>
+        <!--将下划线映射为驼峰-->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+    </settings>
+
+    <!--分页插件-->
+    <plugins>
+        <plugin interceptor="com.github.pagehelper.PageInterceptor"></plugin>
+    </plugins>
+
+</configuration>

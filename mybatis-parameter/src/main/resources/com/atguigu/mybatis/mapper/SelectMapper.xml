@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.atguigu.mybatis.mapper.SelectMapper">
+<!--    User getUserById(Integer id);-->
+    <select id="getUserById" resultType="User">
+        select * from t_user where id = #{id}
+    </select>
+
+<!--    List<User> getAllUser();-->
+    <select id="getAllUser" resultType="User">
+        select * from t_user
+    </select>
+<!--    Integer getCount(); 返回值是Java自带类型的时候-->
+    <!--java自带的类 mybatis已经帮你设置了别名-->
+    <select id="getCount" resultType="int">
+        <!--小细节就是count(字段)只会记录这个字段不为空的记录数量-->
+        <!--所以查全部记录用count(*) 或者count(1)-->
+        select count(*) from t_user
+    </select>
+
+<!--    Map<String,Object> getUserByIdToMap(Integer id);-->
+    <select id="getUserByIdToMap" resultType="map">
+        select * from t_user where id = #{id}
+    </select>
+
+<!--    Map<String,Object> getAllUserToMap();-->
+    <!--一条记录对应的就是一个map-->
+    <select id="getAllUserToMap" resultType="map">
+        select * from t_user
+    </select>
+
+<!--    List<Map<String,Object>> getAllUserToMapInsertintoList();-->
+    <!--List存储了多条记录-->
+    <select id="getAllUserToMapInsertintoList" resultType="map">
+        select * from t_user
+    </select>
+
+</mapper>

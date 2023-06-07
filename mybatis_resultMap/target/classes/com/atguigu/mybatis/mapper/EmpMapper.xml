@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.atguigu.mybatis.mapper.EmpMapper">
+
+<!--    Emp getEmpByEmpId(Integer empId);-->
+
+    <!--自定义映射关系resultMap
+    id:唯一表示
+    type:处理映射关系的实体类的类型
+    -->
+    <resultMap id="empResultMap" type="Emp">
+        <!--id建立主键的映射关系 column就是字段,property就是实体类的属性名-->
+        <id column="emp_id" property="empId"></id>
+        <!--普通字段用result-->
+        <result column="emp_name" property="empName"></result>
+    </resultMap>
+    <select id="getEmpByEmpId" resultMap="empResultMap">
+        select * from t_emp where emp_id = #{empId}
+    </select>
+
+    <select id="getEmpByEmpIdOld" resultType="Emp">
+        <!-- //你会发现字段名和属性名对应不上，empId和empName直接为null
+            解决办法1：在sql里面起个别名，改成对应的字段名-->
+        <!--select * from t_emp where emp_id = #{empId}-->
+        <!--select emp_id empId,emp_name empName,age,gender from t_emp where emp_id = #{empId}-->
+        <!--当字段符合MySQL要求使用_，而属性符合java的要求使用驼峰
+        这个时候可以在Mybatis核心配置文件中设置映射关系-->
+        <!--将下划线映射为驼峰-->
+        <!--<setting name="mapUnderscoreToCamelCase" value="true"/>-->
+        select * from t_emp where emp_id = #{empId}
+    </select>
+
+    
+    <!--处理多对1的映射关系
+        1.级联
+        2.
+    -->
+<!--    Emp getEmpAndDeptByEmpId(Integer empId);-->
+    <!--1.级联-->
+    <!--为什么是Emp不是Dept是因为你返回的结果里面处理不了的是Emp里面的dept信息-->
+    <!--是要和Emp做映射-->
+    <!--resultMap把映射不上的字段对应一下就可以了-->
+    <resultMap id="empAndDeptResultMapOne" type="Emp">
+        <result column="dept_id" property="dept.deptId"></result>
+        <result column="dept_name" property="dept.deptName"></result>
+    </resultMap>
+    <!--2.association 专门处理多对一的映射关系-->
+    <resultMap id="empAndDeptResultMap" type="Emp">
+        <!--而且下面这种assciation得把所有的映射关系都写出来很NT-->
+        <id column="emp_id" property="empId"></id>
+        <result column="emp_name" property="empName"></result>
+        <result column="age" property="age"></result>
+        <result column="gender" property="gender"></result>
+        <!--下面的Dept也是别名代替全类名-->
+        <association property="dept" javaType="Dept">
+            <id column="dept_id" property="deptId"></id>
+            <result column="dept_name" property="deptName"></result>
+        </association>
+    </resultMap>
+
+    <select id="getEmpAndDeptByEmpId" resultMap="empAndDeptResultMap">
+        select te.*,td.* from t_emp te left join t_dept td on te.dept_id = td.dept_id
+        where te.emp_id = #{empId}
+    </select>
+
+
+
+
+    <!--3.分步查询-->
+    <!--对比级联和普通的association就是步骤比较麻烦，你得想清楚每一步查什么
+        但是能降低sql的难度,而且还有一个更重要的优点是延迟加载
+        也叫懒加载。
+        比如你这个方法既查了员工信息也查了部门信息，
+        如果你只想查员工信息，那你截至到第一步就结束就可以了。减少计算
+        但是懒加载必须在核心配置文件中进行配置
+
+    -->
+    <resultMap id="empAndDeptByStepResultMap" type="Emp">
+        <!--而且下面这种assciation得把所有的映射关系都写出来很NT-->
+        <id column="emp_id" property="empId"></id>
+        <result column="emp_name" property="empName"></result>
+        <result column="age" property="age"></result>
+        <result column="gender" property="gender"></result>
+        <!--这里的select就是下一步的sql
+             select就需要全类名加上方法名才能唯一指定一个方法
+             里面的column就是下一步sql的查询条件
+             dept_id在第一步里面就已经查出来了
+            -->
+        <!--fetchType就是加载标签，立即加载eager或者延迟加载lazy
+             默认都是eager。一般开启了延迟加载后才会使用它。
+             针对某一个具体的查询设置立即加载。
+        -->
+        <association property="dept" fetchType="eager"
+                     select="com.atguigu.mybatis.mapper.DeptMapper.getDeptByDeptId"
+                     column="dept_id">
+        </association>
+    </resultMap>
+<!--    Emp getEmpAndDeptByStep(Integer empId);-->
+    <select id="getEmpAndDeptByStep" resultMap="empAndDeptByStepResultMap">
+        select * from t_emp where emp_id = #{empId}
+    </select>
+
+    <!--虽然返回的是List，但是mybatis只关心存放的实体-->
+<!--    List<Emp> getEmpsByDeptId(Integer deptId);-->
+    <select id="getEmpsByDeptId" resultType="Emp">
+        select * from t_emp where dept_id = #{deptId}
+    </select>
+</mapper>

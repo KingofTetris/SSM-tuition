@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.atguigu.mybatis.mapper.DeptMapper">
+
+
+<!--    Dept getDeptByDeptId(Integer deptId);-->
+    <select id="getDeptByDeptId" resultType="Dept">
+        select * from t_dept where dept_id = #{deptId}
+    </select>
+
+
+<!--    Dept getDeptAndEmpByDeptId(Integer deptId);-->
+
+    <!--1.1对多第一种处理方式 collection标签-->
+    <resultMap id="DeptAndEmpByDeptIdResultMapOne" type="Dept">
+        <id column="dept_id" property="deptId"></id>
+        <result column="dept_name" property="deptName"></result>
+        <!--collection处理1对多的映射关系 处理集合类型的属性-->
+        <!--association处理多对1 处理实体类类型的属性-->
+        <!--集合只关心你要处理的类型是什么，所以不是javaType List而是实体类Emp-->
+        <!--ofType就是专门用于指定集合中存放的数据类型-->
+        <!--前面的property是你要映射的属性-->
+        <collection property="emps" ofType="Emp">
+            <!--下面就一样了-->
+            <id column="emp_id" property="empId"></id>
+            <result column="emp_name" property="empName"></result>
+            <result column="age" property="age"></result>
+            <result column="gender" property="gender"></result>
+        </collection>
+    </resultMap>
+
+
+    <!--2.分步查询-->
+    <resultMap id="DeptAndEmpByDeptIdResultMap" type="Dept">
+        <id column="dept_id" property="deptId"></id>
+        <result column="dept_name" property="deptName"></result>
+        <!--
+                  collection,association结果居然是一样的 我敲。
+                  奇妙的原因在于你用的是分步查询，第二部查出来的就是一个集合。
+                  就不用再设置ofType了
+        -->
+        <collection property="emps" fetchType="lazy"
+                     select="com.atguigu.mybatis.mapper.EmpMapper.getEmpsByDeptId"
+                     column="dept_id">
+        </collection>
+    </resultMap>
+
+    <!-- Dept getDeptAndEmpByDeptId(Integer deptId);-->
+    <select id="getDeptAndEmpByDeptId"  resultMap="DeptAndEmpByDeptIdResultMap">
+       select * from t_dept where dept_id = #{deptId}
+    </select>
+</mapper>

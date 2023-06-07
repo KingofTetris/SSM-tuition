@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+         version="4.0">
+
+
+    <!---->
+    <servlet>
+        <servlet-name>SpringMVC</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:springmvc.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SpringMVC</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+    <!--设置监听器-->
+    <listener>
+        <!--整合Spring和SpringMVC
+        让Spring的IoC容器在监听器的初始化方法中创建
+        早于SpringMVC的IoC容器，
+        SpringMVC的IoC容器是在DispatcherServlet初始化方法中创建的
+        我们设置了 <load-on-startup>1</load-on-startup>
+        让它在服务器加载时初始化。
+        为了让控制层@Controller能得到@Service注册的对象
+        这就要求SpringMVC的IoC容器要早于SpringMVC的IoC容器进行创建
+        其实DispatcherServlet底层的init方法里也有源码显示
+        SpringMVC的IoC容器需要设置一个父类wac.setParent(parent)，
+        这个parent也就是Spring的IoC容器，这样子容器才能访问父容器的Bean。反过来是不行的
+        也说明了这一点。
+        而早于服务器加载时初始化的Web组件有两个Listener和Interceptor
+        我们选择监听器的原因在于，Listener的初始化方法只执行一次，也就只创建一个SpringMVC的IoC容器
+        不在拦截器中创建，是因为拦截器的初衷是对请求进行拦截，你创建了IoC以后还是要放心
+        又何必使用拦截器呢
+        -->
+        <!--在服务器启动时加载Spring的配置文件-->
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+    <!--如果你少了下面的这个配置Spring配置文件的读取
+    那么这个工程在服务器启动的时候就会报错
+    NoSuchBeanDefinitionException:
+    No qualifying bean of type 'com.atguigu.service.HelloService' available:
+    expected at least 1 bean which qualifies as autowire candidate.
+    原因就是找不到@Service标识的Bean
+    -->
+    <!--配置Spring的配置文件路径和名称
+    如果你不配置，默认是在/WEB-INF/下的applicationContext.xml
+    -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:spring.xml</param-value>
+    </context-param>
+</web-app>

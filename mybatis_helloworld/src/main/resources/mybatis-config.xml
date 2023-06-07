@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <!--Mybatis配置文件的标签顺序必须按照下面的顺序
+         type "configuration" must match
+         "(properties?,settings?,typeAliases?,
+         typeHandlers?,objectFactory?,objectWrapperFactory?,
+         reflectorFactory?,plugins?,environments?,
+         databaseIdProvider?,mappers?)".
+    -->
+
+    <!--引入外部文件，此后在当前文件中使用${key}访问-->
+    <properties resource="jdbc.properties"></properties>
+
+    <!--设置类型别名
+       以后映射文件就可以用别名取代全类名
+   -->
+    <typeAliases>
+        <!--显示设置别名-->
+<!--        <typeAlias type="com.atguigu.mybatis.pojo.User" alias="User"></typeAlias>-->
+        <!--不设置别名的话，默认就是类名，不区分大小写,User和user都行-->
+<!--        <typeAlias type="com.atguigu.mybatis.pojo.User"></typeAlias>-->
+        <!--但如果POJO下的类多了，上面的方式就比较麻烦-->
+        <!--于是有了package，指定包下的类都有默认的别名-->
+        <package name="com.atguigu.mybatis.pojo"/>
+    </typeAliases>
+
+    <!--设置连接数据库的环境-->
+    <environments default="development">
+        <environment id="development">
+            <!--这里的type只有两个值JDBC和MANAGED
+                JDBC:表示JDBC中原生的事务管理事务
+                MANAGED:被管理的，例如Spring
+            -->
+            <transactionManager type="JDBC"/>
+            <!--
+            dataSource:设置数据源
+
+            type:数据源的类型
+            三个值:"POOLED|UNPOOLED|JNDI"
+            POOLED:表示使用数据库连接池，用了连接池每次获取连接就不用再获取新的连接
+            UNPOOLED:就是不使用数据库链接库
+            JNDI:表示使用上下文中的数据源
+            -->
+            <dataSource type="POOLED">
+                <!--mysql8 com.mysql.cj.jdbc.Driver-->
+                <!--mysql5 com.mysql.jdbc.Driver-->
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <!--别忘了在核心配置文件中引入映射文件-->
+    <mappers>
+        <!--引入单个映射文件-->
+<!--        <mapper resource="mappers/UserMapper.xml"/>-->
+        <!--包方式引入mapper.xml要有两个条件
+            1.mapper接口和映射文件所在的包必须一致
+            //在这个项目里也就是在resources下面也建了一个com.atguigu.mybatis.mapper的文件夹
+            //这东西的原理其实就是因为虽然在项目里表明上接口和XML在两个文件夹下
+            //resources放的是配置文件，编译以后和主程序在同一个目录下
+            //resources里面的com.atguigu.mybatis.mapper的文件夹是为了起到一个区分配置文件和mappers的作用
+            //最后加载完成后，接口mappers和mappers.xml就变成了在同一个目录下
+            2.mapper接口名和xml的名字一致
+        -->
+        <package name="com.atguigu.mybatis.mapper"/>
+    </mappers>
+</configuration>

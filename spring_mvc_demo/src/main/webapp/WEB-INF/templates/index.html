@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+</head>
+<body>
+<h1>Index.html</h1>
+<!--除了表单form提交，和ajax手动设置post请求，剩下的全是get-->
+<a th:href="@{/hello}">测试@RequstMapping注解所标识的位置</a><br>
+<a th:href="@{/abc}">测试@RequstMapping注解的value属性</a><br>
+<!--浏览器直接访问地址也是get-->
+<form th:action="@{/hello}" method="post"> <!--表单不设置method，默认是GET-->
+    <input type="submit" value="测试@RequstMapping注解的Method属性">
+</form>
+
+<a th:href="@{/hello?username=admin}">测试@RequstMapping注解的param属性</a><br> <!--?拼接参数-->
+<a th:href="@{/hello(username='admin')}">测试@RequstMapping注解的param属性</a><br> <!--()拼接，区别就在下面的不会报错-->
+<a th:href="@{/adc/test/ant}">测试@RequstMapping注解的Ant风格路径</a><br>
+<a th:href="@{/test/rest/admin/1}">测试@RequstMapping注解的value属性中的占位符</a><br>
+
+<hr>
+<form th:action="@{/param/servletAPI}" method="post">
+    <div>@{/param/servletAPI}</div>
+    用户名:<input type="text" name="username">
+    密码:<input type="password" name="password">
+    <input type="submit" value="登录">
+</form>
+<hr>
+<form th:action="@{/param}" method="post">
+    <div>@{/param}</div>
+    用户名:<input type="text" name="username">
+    密码:<input type="password" name="password">
+    <input type="submit" value="登录">
+</form>
+
+<hr>
+<form th:action="@{/param/pojo}" method="post">
+    <div>@{/param/pojo}</div>
+    用户名:<input type="text" name="username">
+    密码:<input type="password" name="password">
+    <input type="submit" value="登录">
+</form>
+<hr>
+<!--JavaWeb中介绍过四个域对象 PageContext,Request,Session,Application
+    但是SpringMVC后我们不再使用jsp作为页面，都是html
+    也就不再包含PageContext
+-->
+<a th:href="@{/test/mav}">测试通过ModelAndView向请求域Request共享数据</a><br/>
+<a th:href="@{/test/session}">向会话域Session共享数据</a><br/>
+<a th:href="@{/test/application}">向应用域Application共享数据</a><br/>
+
+<hr>
+<a th:href="@{/test/view/thymeleaf}">测试SpringMVC视图ThymeleafView</a><br/>
+<a th:href="@{/test/view/forward}">测试SpringMVC视图InternalResourceView</a><br/>
+<a th:href="@{/test/view/redirect}">测试SpringMVC视图RedirectView</a><br/>
+
+</body>
+</html>

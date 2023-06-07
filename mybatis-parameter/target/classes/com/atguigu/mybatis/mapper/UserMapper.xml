@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.atguigu.mybatis.mapper.UserMapper">
+    <!--?占位符最常用，而且能避免sql注入-->
+    <!--    User getUserByUsername(String username);-->
+    <!--
+    ${}的本质就是字符串拼接，#{}的本质就是占位符?赋值
+    ${}使用字符串拼接的方式拼接sql，若为字符串类型或日期类型的字段进行赋值时，需要手动加单
+    引号；但是#{}使用占位符赋值的方式拼接sql，此时为字符串类型或日期类型的字段进行赋值时，
+    可以自动添加单引号
+    若mapper接口中的方法参数为单个的字面量类型
+    此时可以使用${}和#{}以任意的名称获取参数的值，注意${}需要手动加单引号
+    -->
+    <select id="getUserByUsername" resultType="User">
+        select * from t_user where username = #{username}
+        <!--其实这个#{}里面内容写什么都无所谓，在底层都是占位符?-->
+        <!--select * from t_user where username = '${username}'-->
+        <!--问题出来了${}不会自动加上''，在sql里面没有引号的字符串就会被识别成字段。-->
+    </select>
+
+<!--    User checkLogin(String username,String password)-->
+    <select id="checkLogin" resultType="User">
+        <!--arg0,arg1  param1,param2 你喜欢用哪个就用哪种-->
+        <!--select * from t_user where username = #{arg0} and password = #{arg1}-->
+        select * from t_user where username = #{param1} and password = #{param2}
+    </select>
+
+<!--    User checkLoginByMap(Map<String,Object> map);-->
+    <!--手动建map直接用key访问就行了-->
+    <select id="checkLoginByMap" resultType="User">
+        select * from t_user where username = #{username} and password = #{password}
+    </select>
+
+<!--    void insertUser(User user);-->
+    <insert id="insertUser">
+        <!--参数直接用类的属性名就行了
+            注意不是成员变量的名字。
+        -->
+        insert into t_user values(null,#{username},#{password},#{age},#{gender},#{email})
+    </insert>
+
+    <!-- User checkLoginByParam(@Param("username") String username,@Param("password")String password);-->
+    <select id="checkLoginByParam" resultType="User">
+        select * from t_user where username = #{username} and password = #{password}
+    </select>
+</mapper>

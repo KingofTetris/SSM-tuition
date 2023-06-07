@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+</head>
+<body>
+<h1>index.html</h1>
+<!-- xmlns:th="http://www.thymeleaf.org" 先提供命名空间-->
+<!--用thymeleaf的href就会自动加上上下文路径-->
+<!--所以下面这个是http://localhost:8080/SpringMVC/hello-->
+<a th:href="@{/hello}">测试SpringMVC</a>
+<!--浏览器解析的/表示localhost:8080 没有上下文路径-->
+<!--这个普通的是http://localhost:8080/hello-->
+<!--浏览器向服务器发送/hello的请求-->
+<a href="/hello">测试绝对路径</a>
+</body>
+</html>

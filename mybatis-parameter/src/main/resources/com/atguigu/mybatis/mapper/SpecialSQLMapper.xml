@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.atguigu.mybatis.mapper.SpecialSQLMapper">
+
+<!--    List<User> getUserByLike(@Param("mohu") String mohu);-->
+    <select id="getUserByLike" resultType="User">
+        <!--#{}被当成占位符?，放到''就是单纯的? 不是占位符了
+            这个时候直接用${}就可以了
+        -->
+        <!--select * from t_user where username like '%${mohu}%'-->
+        <!--最常用的是下面这种用""双引号拼接，保持全文都是#{}-->
+        select * from t_user where username like "%"#{mohu}"%"
+    </select>
+
+
+    <!--说白了，就是不能加上引号的地方，就不能用#{}，比如in(),()里面就不能有引号，
+        或者表的名字 t_user 也不能加引号-->
+    <!--    void deleteMoreUser(@Param("ids") String ids); //9,10-->
+    <delete id="deleteMoreUser">
+        <!--你用#{} 相当于在字符串外面加上'' 就会出错-->
+        delete from t_user where id in(${ids})
+    </delete>
+
+
+<!--    List<User> getUserList(@Param("tableName")String tableName);-->
+    <select id="getUserList" resultType="User">
+        <!--#{} 会自动加上单引号，所以表明的位置不能用#{}-->
+        select * from ${tableName}
+    </select>
+
+    <!--因为增删改操作的返回值固定为受影响的行数
+        你想获得添加用户后的主键信息，就得使用keyProperty属性
+        他对应的值就是你要把主键放在user的哪个属性中。
+        useGeneratedKeys="true" 表示当前添加功能使用了自增的主键
+        这个功能非常常用
+    -->
+    <!--    void insertUser(User user);-->
+    <!--获取自增的主键-->
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
+        insert into t_user values(null,#{username},
+                                  #{password},
+                                  #{age},
+                                  #{gender},
+                                  #{email})
+    </insert>
+</mapper>

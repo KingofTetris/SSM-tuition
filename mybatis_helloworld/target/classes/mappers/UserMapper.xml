@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--上面是xml文件声明，固定第一行,下面是约束，注意这两个东西之间不能有注释-->
+<!--ns 接口的全类名-->
+<mapper namespace="com.atguigu.mybatis.mapper.UserMapper">
+    <!--mapper接口和映射文件要保证两个一致
+        1.mapper接口名和映射文件的namespace保持一致
+        2.mapper接口中的方法名和映射文件中的sql的id名保持一致
+    -->
+    <!--方法名insertUser();-->
+    <insert id="insertUser">
+        insert into t_user values(null,'admin','123456',23,'男','12345@qq.com')
+    </insert>
+
+    <update id="updateUser">
+        update t_user set username='root',password='2233' where id = 2
+    </update>
+
+    <delete id="deleteUser">
+        delete from t_user where id = 3
+    </delete>
+
+    <!--
+    resultType设置结果类型，即查询出来的每条数据要转换为的Java类型
+    resultMap自定义映射，用于处理多对一或者一对多的映射关系
+    两者只能设置一个
+    -->
+    <select id="getUserById" resultType="User">
+        select * from t_user where id= 1
+    </select>
+
+    <!--虽然查询出来的是一个List但是里面的信息都是User-->
+    <select id="getAllUser" resultType="User">
+        select * from t_user
+    </select>
+
+
+</mapper>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+         version="4.0">
+
+    <!--配置SpringMVC的前端控制器DispatcherServlet-->
+    <!--SpringMVC的配置文件默认的位置和名称
+        位置:WEB-INF下
+        名称:<servlet-name>-servlet.xml
+        这里就是SpringMVC-servlet.xml
+    -->
+    <!--
+      <url-pattern>/</url-pattern>
+      /和/*的区别在于
+      /:匹配浏览器向服务器发送的所有请求(不包括.jsp)
+      /*:匹配浏览器向服务器发送的所有请求(包括.jsp)
+      .jsp的请求已经在tomcat的配置文件中进行了配置
+      使用JspServlet来处理
+    -->
+    <servlet>
+        <servlet-name>SpringMVC</servlet-name>
+        <!--另外在加载DispatcherServlet的过程中就会自动读取SpringMVC的配置文件-->
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <!--设置SpringMVC配置文件的位置和名称-->
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <!--前面的classpath加上才是类路径，所以你放java和resources下都可以
+              但是我们一般都把配置文件放在resources下。
+             不写就还是WEB-INF-->
+            <param-value>classpath:springmvc.xml</param-value>
+        </init-param>
+        <!--load-on-startup 把DispatcherServlet初始化放在服务器启动时，而不是第一次访问页面的时候，优化用户体验
+            否则DispatcherServlet的初始化操作过多，第一次访问页面会比较慢。
+        -->
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SpringMVC</servlet-name>
+        <!--DispatcherServlet处理浏览器发出的所有请求，除了静态资源-->
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+</web-app>

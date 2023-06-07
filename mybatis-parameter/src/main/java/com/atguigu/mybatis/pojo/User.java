@@ -1,0 +1,99 @@
+package com.atguigu.mybatis.pojo;
+
+/**
+ * @author by KingOfTetris
+ * @date 2023/5/28
+ */
+public class User {
+    private Integer id;
+
+    private String username;
+
+    private String password;
+
+    private Integer age;
+
+    private String gender;
+
+    private String email;
+
+
+    /**
+     * 成员类中的属性只和get set方法有关
+     * 把get/set去掉以后的部分小写才是mybatis所谓的属性
+     * 即使你的类里面没有上面的成员变量，有get set方法还是能访问
+     * 对象的属性
+     * @return
+     */
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public User() {
+    }
+
+    public User(Integer id, String username, String password, Integer age, String gender, String email) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.age = age;
+        this.gender = gender;
+        this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", age=" + age +
+                ", gender='" + gender + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
+}

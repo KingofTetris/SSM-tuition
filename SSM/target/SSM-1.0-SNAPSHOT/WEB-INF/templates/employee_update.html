@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>更新员工信息</title>
+    <link rel="stylesheet" th:href="@{/static/css/index_work.css}">
+</head>
+<body>
+
+<!--不要在table里面放form!!-->
+<form th:action="@{/employee}" method="post">
+    <input type="hidden" name="_method" value="put">
+    <!--thymeleaf你要在标签中的属性中取值，就要加上th:-->
+    <input type="hidden" name="id" th:value="${employee.id}">
+    <table>
+        <tr>
+            <th colspan="2">更新员工信息</th>
+        </tr>
+        <tr>
+            <td>lastName</td>
+            <td>
+                <!--th:value 设置默认值-->
+                <input type="text" name="lastName" th:value="${employee.lastName}">
+            </td>
+        </tr>
+        <tr>
+            <td>email</td>
+            <td>
+                <input type="text" name="email" th:value="${employee.email}">
+            </td>
+        </tr>
+        <tr>
+            <td>gender</td>
+            <td>
+                <!--单选框回显，使用 th:field="${employee.gender}"
+                只要你的field内的内容和单选框里的value值是一样的 就会进行回显。
+                -->
+                <input type="radio" name="gender" value="1" th:field="${employee.gender}">男
+                <input type="radio" name="gender" value="0" th:field="${employee.gender}">女
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" value="update">
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>
